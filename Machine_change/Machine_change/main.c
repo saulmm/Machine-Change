@@ -8,26 +8,26 @@
 
 #include <stdio.h>
 
-int cambio(int n, int x, int valor[],int solucion[]) {
-    for (int i=0;i<n;i++)
-        solucion[i] = 0;
+int change(int n, int changeQuantity, int availableCoins[],int solutionCoins[]) {
+    for (int coinPos = 0; coinPos < n; coinPos++)
+        solutionCoins[coinPos] = 0;
     
-    int i = 0, suma = 0;
+    int i = 0, changeAmount = 0;
     
-    while (suma<x && i<n)
-        if (suma + valor[i] <= x) {
-            solucion[i]++;
-            suma+=valor[i];
+    while (changeAmount < changeQuantity && i<n)
+        if (changeAmount + availableCoins[i] <= changeQuantity) {
+            solutionCoins[i]++;
+            changeAmount += availableCoins[i];
             
         } else
             i++;
     
-    if (suma==x)
+    if (changeAmount == changeQuantity)
         return 1;
     
     else {
         for (int i=0;i<n;i++)
-            solucion[i]=0;
+            solutionCoins[i]=0;
         
         return 0;
     }
@@ -40,7 +40,7 @@ int main(int argc, const char * argv[]) {
     int valor[5]= {50,25,20,5,1};
     int solucion[10] = {};
     
-    cambio(5, 42, valor, solucion);
+    change(5, 42, valor, solucion);
 
     
     for (int j = 0; j < 10; j++) {
