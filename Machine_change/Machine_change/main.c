@@ -7,6 +7,7 @@
 //
 
 #include <stdio.h>
+#include "dVector.h"
 
 int change(int n, int changeQuantity, int availableCoins[],int solutionCoins[]) {
     for (int coinPos = 0; coinPos < n; coinPos++)
@@ -35,7 +36,12 @@ int change(int n, int changeQuantity, int availableCoins[],int solutionCoins[]) 
 
 
 int main(int argc, const char * argv[]) {
-    printf("Hello, World!\n");
+    vectorP myVect;
+    createVector(&myVect, 30);
+    
+    assignValue(&myVect, 2, 30);
+    imprimir(myVect, 30);
+    
     
     int valor[5]= {50,25,20,5,1};
     int solucion[10] = {};
