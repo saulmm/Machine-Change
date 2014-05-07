@@ -12,4 +12,4 @@ void freeVector (vectorP *v1);
 
 int getSize (vectorP v1);
 
-void imprimir (vectorP v1, int size);
+void printVect (vectorP v1);

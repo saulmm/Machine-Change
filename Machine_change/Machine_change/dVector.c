@@ -33,7 +33,6 @@ void createVector(vectorP *v1, int _size) {
 }
 
 void assignValue(vectorP *v1, int position, ElementType value) {
-    
     if (*v1 != NULL) {
         *((*v1) -> data + position) = value;
         
@@ -84,13 +83,13 @@ ElementType getValue(vectorP v1, int index) {
 }
 
 
-void imprimir(vectorP v1, unsigned long size) {
+void printVect(vectorP v1, unsigned long size) {
     if (v1 != NULL) {
-        for (int i = 0; i < size; i++) {
-            printf("Elemento %d, valor: %d\n", i, getValue(v1, i));
+        for (int i = 0; i < getSize(v1); i++) {
+            printf("Element at %d, value: %d\n", i, getValue(v1, i));
         }
         
     } else {
-        printf("[ERROR] El vector no ha sido inicializado.");
+        printf("[ERROR] The vector is not initialized.");
     }
 }
