@@ -11,10 +11,9 @@
 #include "dVector.h"
 
 
-//const float EURO_COINS [5] = {.01f, .05f, .1f, .2f, .5f};
+
 const float EURO_COINS [5] = {.5f, .2f, .1f, .05f, .01f};
-const float YEN_COINS [5] = {5, 10, 50, 100, 500};
-//const float DOLAR_COINS [6] = {0.01, 0.05, 0.10, 0.25, 0.50, 1};
+const float YEN_COINS [5] = {500, 100, 50, 10, 5};
 const float DOLAR_COINS [6] = {1, .5, .25, .1, .05, .01};
 
 
@@ -67,22 +66,18 @@ void getSpecificCoin (int index, CoinInfo coinInfo, float * coinContainer) {
 }
 
 
-
 int changeInf(int n, float changeQuantity, CoinInfo coinInfo, vectorP * solutionCoins) {
- 
-    int i = 0;
-    float changeAmount = 0;
-    int cointAmount = 0;
-    float changeContainer = 0;
+    int i = 0, cointAmount = 0;
+    float changeAmount = 0, changeContainer = 0;
  
     while (changeAmount < changeQuantity && i<n) {
         getSpecificCoin(i, coinInfo, &changeContainer);
         
         if (changeAmount + changeContainer <= changeQuantity) {
-             cointAmount++;
-             assignValue(solutionCoins, i, cointAmount);
-             changeAmount += changeContainer;
-            printf("Change amount %f\n", changeAmount);
+            cointAmount++;
+
+            assignValue(solutionCoins, i, cointAmount);
+            changeAmount += changeContainer;
  
         } else {
              cointAmount = 0;
@@ -90,43 +85,8 @@ int changeInf(int n, float changeQuantity, CoinInfo coinInfo, vectorP * solution
         }
     }
  
-    if (changeAmount == changeQuantity)
+     if (changeAmount == changeQuantity)
          return 1;
-    else
-        return 0;
+
+    return 0;
  }
-
-
-
-/*int changeInf(int n, int changeQuantity, CoinInfo coinInfo, vectorP * solutionCoins) {
-    int i = 0, changeAmount = 0, coinAmount = 0;
-    float availabeCoinContainer = 0;
-    
-    while (changeAmount < changeQuantity && i<n) {
-        getSpecificCoin(i, coinInfo, &availabeCoinContainer);
-        
-        if (changeAmount + availabeCoinContainer <= changeQuantity) {
-            coinAmount ++;
-            assignValue(solutionCoins, i, coinAmount);
-            changeAmount += availabeCoinContainer;
-            
-        } else {
-            i++;
-            coinAmount = 0;
-        }
-    }
-    
-    if (changeAmount == changeQuantity)
-        return 1;
-    
-    else {
-        for (int i=0;i<n;i++)
-            assignValue(solutionCoins, i, 0);
-        
-        return 0;
-    }
-}*/
-
-
-
-
