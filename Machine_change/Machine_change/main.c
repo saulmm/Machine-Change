@@ -1,3 +1,6 @@
+
+
+
 //
 //  main.c
 //  Machine_change
@@ -10,48 +13,23 @@
 #include "dVector.h"
 #include "Coin.h"
 
-/*
-int change(int n, int changeQuantity, int availableCoins[],int solutionCoins[]) {
-    for (int coinPos = 0; coinPos < n; coinPos++)
-        solutionCoins[coinPos] = 0;
-    
-    int i = 0, changeAmount = 0;
-    
-    while (changeAmount < changeQuantity && i<n)
-        if (changeAmount + availableCoins[i] <= changeQuantity) {
-            solutionCoins[i]++;
-            changeAmount += availableCoins[i];
-            
-        } else
-            i++;
-    
-    if (changeAmount == changeQuantity)
-        return 1;
-    
-    else {
-        for (int i=0;i<n;i++)
-            solutionCoins[i]=0;
-        
-        return 0;
-    }
-}
-*/
+
 
 int main(int argc, const char * argv[]) {
-    vectorP myVect;
-    createVector(&myVect, 30);
-    
-    assignValue(&myVect, 2, 30);
 
     
+    CoinInfo dolarInfo;
+    selectCoin(Dolar, &dolarInfo);
     
-    // int valor[5]= {50,25,20,5,1};
-    // int solucion[10] = {};
-    // change(5, 42, valor, solucion);
-
-    Coin euroCoin;
-    selectCoin(Euro, &euroCoin);
-    getCoin(0, euroCoin);
+    float container = 0;
+    printf("Get specific coin: %f\n\n", container);
+    
+    vectorP solutionCoins = NULL;
+    createVector(&solutionCoins, 5);
+    
+    
+    changeInf(5, 0.75, dolarInfo, &solutionCoins);
+    printVect(solutionCoins);
     
     return 0;
 }

@@ -8,10 +8,14 @@ typedef enum {
 
 typedef struct {
     CoinType coinType;
+    short coinCount;
     float* availableCoins;
-} *Coin;
+    
+} * CoinInfo;
 
 
-void selectCoin (CoinType coinType, Coin* userCoin);
+void selectCoin (CoinType coinType, CoinInfo * userCoin);
 
-void getCoin (int index, Coin coinInfo);
+void getSpecificCoin (int index, CoinInfo coinInfo, float * coinContainer);
+
+int changeInf(int n, float changeQuantity, CoinInfo coinInfo, vectorP * solutionCoins);
