@@ -16,10 +16,8 @@
 
 
 int main(int argc, const char * argv[]) {
-
-    
     CoinInfo dolarInfo;
-    selectCoin(Dolar, &dolarInfo);
+    selectCoin(Euro, &dolarInfo);
     
     float container = 0;
     printf("Get specific coin: %f\n\n", container);
@@ -27,10 +25,24 @@ int main(int argc, const char * argv[]) {
     vectorP solutionCoins = NULL;
     createVector(&solutionCoins, 5);
     
-    
     changeInf(5, 0.75, dolarInfo, &solutionCoins);
     printVect(solutionCoins);
     
+    vectorP stock = NULL;
+    int cointSize = 0;
+    
+    getCointSize(dolarInfo, &cointSize);
+    
+    // Getting stock
+    printf("\n\nGetting stock: \n");
+    
+    createVector(&stock, cointSize);
+    readStockFile(dolarInfo, &stock);
+    printVect(stock);
+
+
+    
+    printf("\n%d",Yen);
     return 0;
 }
 

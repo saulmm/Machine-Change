@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "dVector.h"
 
 
@@ -29,7 +30,9 @@ typedef struct {
     CoinType coinType;
     short coinCount;
     float * availableCoins;
-} *CoinInfo;
+    int stock;
+    
+} * CoinInfo;
 
 
 void selectCoin (CoinType coinType, CoinInfo* userCoin) {
@@ -38,20 +41,25 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
     switch (coinType) {
         case Euro:
             printf("You selected euro...\n");
+            (*userCoin) -> coinType = Euro;
             (*userCoin) -> availableCoins = (float*) &EURO_COINS;
             (*userCoin) -> coinCount = 5;
             break;
             
         case Yen:
             printf("You selected yen...\n");
+            (*userCoin) -> coinType = Yen;
             (*userCoin) -> availableCoins = (float*) &YEN_COINS;
             (*userCoin) -> coinCount = 5;
             break;
             
         case Dolar:
             printf("You selected dolar...\n");
+            (*userCoin) -> coinType = Dolar;
             (*userCoin) -> availableCoins = (float*) &DOLAR_COINS;
             (*userCoin) -> coinCount = 6;
+            
+
             break;
             
         default:
@@ -63,6 +71,17 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
 
 void getSpecificCoin (int index, CoinInfo coinInfo, float * coinContainer) {
     *(coinContainer) = *((coinInfo) -> availableCoins + index);
+}
+
+
+void getCoinType (CoinInfo coinInfo, CoinType * coinType) {
+    *(coinType) = ((coinInfo) -> coinType);
+}
+
+
+void getCointSize (CoinInfo coinInfo, short * cointSize) {
+    *(cointSize) = ((coinInfo) -> coinCount);
+    
 }
 
 
@@ -90,3 +109,54 @@ int changeInf(int n, float changeQuantity, CoinInfo coinInfo, vectorP * solution
 
     return 0;
  }
+
+
+void readStockFile(CoinInfo coin, vectorP * stock) {
+    char * line = NULL;
+    
+    FILE * fp;
+    size_t len = 0;
+    ssize_t read;
+    
+    fp = fopen("/Users/wtf/Desktop/stock.txt", "r");
+    
+    if(fp != NULL) {
+        short cointSize = 0, counter = 0;
+
+        const char delimiter[2] = ",";
+        
+        // size_t is an unsigned data type. This type is used to represent the size of an object.
+        // ssize_t is used to represent the sizes of blocks that can be read or written in a single operation.
+        while ((read = getline(&line, &len, fp)) != -1) {
+            char * coinStock;
+            
+            CoinType selectedCoin;
+            short cointCount = 0;
+            
+            getCoinType(coin ,&selectedCoin);
+            getCointSize(coin, &cointCount);
+
+            if (counter == selectedCoin) {
+                coinStock = strtok(line, delimiter);
+                int coinCounter = 0;
+                
+                while(coinStock != NULL ) {
+                    assignValue(stock, coinCounter, atoi(coinStock));
+                    coinStock = strtok(NULL, delimiter);
+                    coinCounter++;
+                }
+                
+                return;
+            }
+        
+            counter++;
+        }
+    
+    } else {
+        printf("The file it's null\n");
+        return;
+    }
+    
+
+    
+}
