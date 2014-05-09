@@ -18,7 +18,7 @@ void selectCoin (CoinType coinType, CoinInfo * userCoin);
 
 void getSpecificCoin (int index, CoinInfo coinInfo, float * coinContainer);
 
-int changeInf(int n, float changeQuantity, CoinInfo coinInfo, vectorP * solutionCoins);
+int changeInf(int n, float changeQuantity, CoinInfo coinInfo, vectorP * solutionCoins, vectorP * stock);
 
 void getCointSize (CoinInfo coinInfo, short * cointSize);
 

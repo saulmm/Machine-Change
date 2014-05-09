@@ -17,15 +17,12 @@
 
 int main(int argc, const char * argv[]) {
     CoinInfo dolarInfo;
-    selectCoin(Euro, &dolarInfo);
-    
-    float container = 0;
-    printf("Get specific coin: %f\n\n", container);
+    selectCoin(Dolar, &dolarInfo);
     
     vectorP solutionCoins = NULL;
     createVector(&solutionCoins, 5);
     
-    changeInf(5, 0.75, dolarInfo, &solutionCoins);
+    changeInf(5, 1.25, dolarInfo, &solutionCoins, NULL);
     printVect(solutionCoins);
     
     vectorP stock = NULL;

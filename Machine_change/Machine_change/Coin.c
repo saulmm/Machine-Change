@@ -40,26 +40,24 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
     
     switch (coinType) {
         case Euro:
-            printf("You selected euro...\n");
+            printf("The selected coin is: [EURO]\n");
             (*userCoin) -> coinType = Euro;
             (*userCoin) -> availableCoins = (float*) &EURO_COINS;
             (*userCoin) -> coinCount = 5;
             break;
             
         case Yen:
-            printf("You selected yen...\n");
+            printf("The selected coin is: [YEN]\n");
             (*userCoin) -> coinType = Yen;
             (*userCoin) -> availableCoins = (float*) &YEN_COINS;
             (*userCoin) -> coinCount = 5;
             break;
             
         case Dolar:
-            printf("You selected dolar...\n");
+            printf("The selected coin is: [DOLAR]\n");
             (*userCoin) -> coinType = Dolar;
             (*userCoin) -> availableCoins = (float*) &DOLAR_COINS;
             (*userCoin) -> coinCount = 6;
-            
-
             break;
             
         default:
@@ -85,22 +83,20 @@ void getCointSize (CoinInfo coinInfo, short * cointSize) {
 }
 
 
-int changeInf(int n, float changeQuantity, CoinInfo coinInfo, vectorP * solutionCoins) {
-    int i = 0, cointAmount = 0;
+int changeInf(int maxIterations, float changeQuantity, CoinInfo coinInfo, vectorP * solutionCoins, vectorP * stock) {
     float changeAmount = 0, changeContainer = 0;
- 
-    while (changeAmount < changeQuantity && i<n) {
+    int i = 1;
+    
+    while (changeAmount < changeQuantity && i < maxIterations) {
         getSpecificCoin(i, coinInfo, &changeContainer);
         
         if (changeAmount + changeContainer <= changeQuantity) {
-            cointAmount++;
-
-            assignValue(solutionCoins, i, cointAmount);
+            incrementVect(solutionCoins, i);
+            
             changeAmount += changeContainer;
  
         } else {
-             cointAmount = 0;
-             i++;
+            i++;
         }
     }
  

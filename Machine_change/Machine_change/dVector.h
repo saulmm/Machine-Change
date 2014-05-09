@@ -13,3 +13,7 @@ void freeVector (vectorP *v1);
 int getSize (vectorP v1);
 
 void printVect (vectorP v1);
+
+void decrementVect (vectorP * v1, int position);
+
+void incrementVect (vectorP * v1, int position);

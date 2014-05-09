@@ -82,6 +82,33 @@ ElementType getValue(vectorP v1, int index) {
     return output;
 }
 
+void incrementVect (vectorP * v1, int position) {
+    ElementType container = 0;
+    
+    if(position < getSize(*v1)) {
+        container = getValue(*v1, position);
+        container ++;
+        assignValue(v1, position, container);
+        
+    } else {
+        printf("[ERROR] Not defined value at: %d.\n", index);
+    }
+}
+
+
+void decrementVect (vectorP * v1, int position) {
+    ElementType container = 0;
+    
+    if(position < getSize(*v1)) {
+        container = getValue(*v1, position);
+        container --;
+        assignValue(v1, position, container);
+        
+    } else {
+        printf("[ERROR] Not defined value at: %d.\n", index);
+    }
+}
+
 
 void printVect(vectorP v1, unsigned long size) {
     if (v1 != NULL) {
