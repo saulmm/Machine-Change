@@ -21,22 +21,26 @@ int main(int argc, const char * argv[]) {
     
     vectorP solutionCoins = NULL;
     createVector(&solutionCoins, 5);
-    
-    changeInf(5, 1.25, dolarInfo, &solutionCoins, NULL);
-    printVect(solutionCoins);
-    
-    vectorP stock = NULL;
-    int cointSize = 0;
-    
-    getCointSize(dolarInfo, &cointSize);
+
     
     // Getting stock
     printf("\n\nGetting stock: \n");
+    int cointSize = 0;
+    vectorP stock = NULL;
+    getCointSize(dolarInfo, &cointSize);
     
     createVector(&stock, cointSize);
     readStockFile(dolarInfo, &stock);
     printVect(stock);
 
+    
+    changeInf(5, 1.25, dolarInfo, &solutionCoins, &stock);
+    printf("\nResulting change\n\n");
+    printVect(solutionCoins);
+    
+    printf("\nStock after change\n\n");
+    printVect(stock);
+    
 
     
     printf("\n%d",Yen);

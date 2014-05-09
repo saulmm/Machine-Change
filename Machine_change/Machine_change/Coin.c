@@ -93,6 +93,10 @@ int changeInf(int maxIterations, float changeQuantity, CoinInfo coinInfo, vector
         if (changeAmount + changeContainer <= changeQuantity) {
             incrementVect(solutionCoins, i);
             
+            if(stock != NULL) {
+                decrementVect(stock, i);
+            }
+            
             changeAmount += changeContainer;
  
         } else {
@@ -102,7 +106,7 @@ int changeInf(int maxIterations, float changeQuantity, CoinInfo coinInfo, vector
  
      if (changeAmount == changeQuantity)
          return 1;
-
+    
     return 0;
  }
 
