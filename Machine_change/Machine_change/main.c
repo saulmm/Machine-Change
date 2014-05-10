@@ -12,6 +12,14 @@
 #include <stdio.h>
 #include "dVector.h"
 #include "Coin.h"
+#include <stdlib.h>
+
+
+
+
+
+
+
 
 
 
@@ -29,21 +37,19 @@ int main(int argc, const char * argv[]) {
     vectorP stock = NULL;
     getCointSize(dolarInfo, &cointSize);
     
+    printf("Vector size %d\n", cointSize);
     createVector(&stock, cointSize);
-    readStockFile(dolarInfo, &stock);
+    readStock(dolarInfo, &stock);
     printVect(stock);
 
     
-    changeInf(5, 1.25, dolarInfo, &solutionCoins, &stock);
-    printf("\nResulting change\n\n");
-    printVect(solutionCoins);
+    // changeInf(5, 1.25, dolarInfo, &solutionCoins, &stock);
+    // printf("\nResulting change\n\n");
+    // printVect(solutionCoins);
     
-    printf("\nStock after change\n\n");
-    printVect(stock);
+    // printf("\nStock after change\n\n");
+    // printVect(stock);
     
-
-    
-    printf("\n%d",Yen);
     return 0;
 }
 

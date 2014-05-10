@@ -9,8 +9,9 @@ typedef enum {
 typedef struct {
     CoinType coinType;
     short coinCount;
-    float* availableCoins;
-    
+    int stock;
+    float * availableCoins;
+    char * coinName;
 } * CoinInfo;
 
 
@@ -24,5 +25,6 @@ void getCointSize (CoinInfo coinInfo, short * cointSize);
 
 void getCoinType (CoinInfo coinInfo, CoinType * coinType) ;
 
+void readStock(CoinInfo coin, vectorP * stock);
 
-void readStockFile(CoinInfo coin, vectorP* stock);
+void getCoinName (CoinInfo coinInfo, char ** _coinName);

@@ -13,7 +13,7 @@
 
 
 
-const float EURO_COINS [5] = {.5f, .2f, .1f, .05f, .01f};
+const float EURO_COINS [8] = {2, 1, .5f, .2f, .1f, .05f, .02f, .01f};
 const float YEN_COINS [5] = {500, 100, 50, 10, 5};
 const float DOLAR_COINS [6] = {1, .5, .25, .1, .05, .01};
 
@@ -29,10 +29,18 @@ typedef enum {
 typedef struct {
     CoinType coinType;
     short coinCount;
-    float * availableCoins;
     int stock;
-    
+    float * availableCoins;
+    char * coinName;
+
 } * CoinInfo;
+
+
+void remove_newline_ch(char *line) {
+    int new_line = strlen(line) -1;
+    if (line[new_line] == '\n')
+        line[new_line] = '\0';
+}
 
 
 void selectCoin (CoinType coinType, CoinInfo* userCoin) {
@@ -43,7 +51,10 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
             printf("The selected coin is: [EURO]\n");
             (*userCoin) -> coinType = Euro;
             (*userCoin) -> availableCoins = (float*) &EURO_COINS;
-            (*userCoin) -> coinCount = 5;
+            (*userCoin) -> coinCount = 8;
+            
+            (*userCoin) -> coinName = malloc(10 * sizeof(char));
+            (*userCoin) -> coinName = "Euro";
             break;
             
         case Yen:
@@ -51,6 +62,9 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
             (*userCoin) -> coinType = Yen;
             (*userCoin) -> availableCoins = (float*) &YEN_COINS;
             (*userCoin) -> coinCount = 5;
+
+            (*userCoin) -> coinName = malloc(10 * sizeof(char));
+            (*userCoin) -> coinName = "Yen";
             break;
             
         case Dolar:
@@ -58,6 +72,9 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
             (*userCoin) -> coinType = Dolar;
             (*userCoin) -> availableCoins = (float*) &DOLAR_COINS;
             (*userCoin) -> coinCount = 6;
+            
+            (*userCoin) -> coinName = malloc(10 * sizeof(char));
+            (*userCoin) -> coinName = "Dolar";
             break;
             
         default:
@@ -79,7 +96,11 @@ void getCoinType (CoinInfo coinInfo, CoinType * coinType) {
 
 void getCointSize (CoinInfo coinInfo, short * cointSize) {
     *(cointSize) = ((coinInfo) -> coinCount);
-    
+}
+
+
+void getCoinName (CoinInfo coinInfo, char ** _coinName) {
+    *_coinName = ((coinInfo) -> coinName);
 }
 
 
@@ -111,52 +132,62 @@ int changeInf(int maxIterations, float changeQuantity, CoinInfo coinInfo, vector
  }
 
 
-void readStockFile(CoinInfo coin, vectorP * stock) {
+void readStock(CoinInfo coin, vectorP * stock) {
+    int correctCoinFlag = 0;
+    
     char * line = NULL;
+    char * selectedCoin = NULL;
+    char * parseIntegerError = NULL;
     
     FILE * fp;
     size_t len = 0;
     ssize_t read;
     
-    fp = fopen("/Users/wtf/Desktop/stock.txt", "r");
+    fp = fopen("/Users/wtf/Desktop/stock2.txt", "r");
+    getCoinName(coin, &selectedCoin);
+    int coinPosition = 0;
+    
+    printf("Getting stock of: %s\n", selectedCoin);
     
     if(fp != NULL) {
-        short cointSize = 0, counter = 0;
-
-        const char delimiter[2] = ",";
         
-        // size_t is an unsigned data type. This type is used to represent the size of an object.
-        // ssize_t is used to represent the sizes of blocks that can be read or written in a single operation.
+        // Read line by line
         while ((read = getline(&line, &len, fp)) != -1) {
-            char * coinStock;
             
-            CoinType selectedCoin;
-            short cointCount = 0;
+            parseIntegerError = NULL;
+            remove_newline_ch(line);
             
-            getCoinType(coin ,&selectedCoin);
-            getCointSize(coin, &cointCount);
-
-            if (counter == selectedCoin) {
-                coinStock = strtok(line, delimiter);
-                int coinCounter = 0;
+            // parses the string into number, if fails, the report is stored at parseIntegerError.
+            int coinQuantity = (int) strtol(line, &parseIntegerError,10);
+            
+            if (* parseIntegerError) {
                 
-                while(coinStock != NULL ) {
-                    assignValue(stock, coinCounter, atoi(coinStock));
-                    coinStock = strtok(NULL, delimiter);
-                    coinCounter++;
+                // Scans if the column coin is the same that the stored at 'coin' parameter
+                if(strcmp(selectedCoin, parseIntegerError) == 0) {
+                    correctCoinFlag = 1;
+                    printf("Flag setted\n");
+                    
+                } else {
+                    if(correctCoinFlag == 1) {
+                        return;
+                        
+                    } else {
+                        correctCoinFlag = 0;
+                    }
                 }
                 
-                return;
+                printf("Coin: %s\n", parseIntegerError);
+                
+            } else {
+                if(correctCoinFlag == 1) {
+                    printf("Coin [%d]: %d\n",coinPosition, coinQuantity);
+                    assignValue(stock, coinPosition, coinQuantity);
+                    coinPosition ++;
+                }
             }
-        
-            counter++;
+            
         }
-    
-    } else {
-        printf("The file it's null\n");
-        return;
     }
-    
 
     
 }
