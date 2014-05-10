@@ -132,6 +132,22 @@ int changeInf(int maxIterations, float changeQuantity, CoinInfo coinInfo, vector
  }
 
 
+void printCoins(vectorP coins, CoinInfo info) {
+    float currentCoin = 0;
+    
+    if (coins != NULL) {
+        for (int i = 0; i < getSize(coins); i++) {
+            getSpecificCoin(i, info, &currentCoin);
+            printf("%d Coins x [%.2f]\n", getValue(coins, i), currentCoin);
+        }
+        
+    } else {
+        printf("[ERROR] The vector is not initialized.");
+    }
+}
+
+
+
 void readStock(CoinInfo coin, vectorP * stock) {
     int correctCoinFlag = 0;
     

@@ -39,13 +39,13 @@ int main(int argc, const char * argv[]) {
     
     printf("Vector size %d\n", cointSize);
     createVector(&stock, cointSize);
-    readStock(dolarInfo, &stock);
-    printVect(stock);
+     readStock(dolarInfo, &stock);
+    //printVect(stock);
 
-    
-    // changeInf(5, 1.25, dolarInfo, &solutionCoins, &stock);
-    // printf("\nResulting change\n\n");
-    // printVect(solutionCoins);
+    float toChange = 1.25;
+     changeInf(5, toChange, dolarInfo, &solutionCoins, &stock);
+     printf("\nResulting change of %.2f\n\n", toChange);
+     printCoins(solutionCoins, dolarInfo);
     
     // printf("\nStock after change\n\n");
     // printVect(stock);

@@ -91,7 +91,7 @@ void incrementVect (vectorP * v1, int position) {
         assignValue(v1, position, container);
         
     } else {
-        printf("[ERROR] Not defined value at: %d.\n", index);
+        printf("[ERROR] Not defined value at: %d.\n", position);
     }
 }
 
@@ -105,7 +105,7 @@ void decrementVect (vectorP * v1, int position) {
         assignValue(v1, position, container);
         
     } else {
-        printf("[ERROR] Not defined value at: %d.\n", index);
+        printf("[ERROR] Not defined value at: %d.\n", position);
     }
 }
 

@@ -28,3 +28,5 @@ void getCoinType (CoinInfo coinInfo, CoinType * coinType) ;
 void readStock(CoinInfo coin, vectorP * stock);
 
 void getCoinName (CoinInfo coinInfo, char ** _coinName);
+
+void printCoins(vectorP coins, CoinInfo info);
