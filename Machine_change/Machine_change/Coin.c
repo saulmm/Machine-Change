@@ -25,6 +25,13 @@ typedef enum {
 
 } CoinType;
 
+typedef enum {
+    GET_STOCK,
+    UPDATE_STOCK,
+    CREATE_STOCK
+
+} StockMode;
+
 
 typedef struct {
     CoinType coinType;
@@ -103,6 +110,70 @@ void getCoinName (CoinInfo coinInfo, char ** _coinName) {
 }
 
 
+void handleStock(CoinInfo coin, vectorP * stock, StockMode mode) {
+    int correctCoinFlag = 0;
+    int coinPosition = 0;
+    
+    char * line = NULL;
+    char * selectedCoin = NULL;
+    char * parseIntegerError = NULL;
+    
+    FILE * fp;
+    size_t len = 0;
+    ssize_t read;
+    
+    fp = fopen("/Users/wtf/Desktop/stock2.txt", "r+");
+    getCoinName(coin, &selectedCoin);
+
+    
+    printf("Getting stock of: %s\n", selectedCoin);
+    
+    if(fp != NULL) {
+        
+        // Read line by line
+        while ((read = getline(&line, &len, fp)) != -1) {
+            
+            
+            parseIntegerError = NULL;
+            remove_newline_ch(line);
+            
+            // parses the string into number, if fails, the report is stored at parseIntegerError.
+            int coinQuantity = (int) strtol(line, &parseIntegerError,10);
+            
+            if (* parseIntegerError) {
+                
+                // Scans if the column coin is the same that the stored at 'coin' parameter
+                if(strcmp(selectedCoin, parseIntegerError) == 0) {
+                    correctCoinFlag = 1;
+                    
+                } else {
+                    if(correctCoinFlag == 1) {
+                        return;
+                        
+                    } else {
+                        correctCoinFlag = 0;
+                    }
+                }
+                
+                
+            } else {
+                if(correctCoinFlag == 1) {
+                    if(mode == UPDATE_STOCK) {
+                        
+                    } else {
+                        fprintf(fp, "cool\n");
+                        assignValue(stock, coinPosition, coinQuantity);
+                    }
+                    
+                    
+                    coinPosition ++;
+                }
+            }
+        }
+    }
+}
+
+
 int changeInf(int maxIterations, float changeQuantity, CoinInfo coinInfo, vectorP * solutionCoins, vectorP * stock) {
     float changeAmount = 0, changeContainer = 0;
     int i = 0;
@@ -128,9 +199,10 @@ int changeInf(int maxIterations, float changeQuantity, CoinInfo coinInfo, vector
         }
     }
  
-     if (changeAmount == changeQuantity)
-         return 1;
-    
+    if(stock != NULL) {
+        handleStock(coinInfo, stock, UPDATE_STOCK);
+    }
+
     return 0;
  }
 
@@ -147,65 +219,4 @@ void printCoins(vectorP coins, CoinInfo info) {
     } else {
         printf("[ERROR] The vector is not initialized.");
     }
-}
-
-
-
-void readStock(CoinInfo coin, vectorP * stock) {
-    int correctCoinFlag = 0;
-    
-    char * line = NULL;
-    char * selectedCoin = NULL;
-    char * parseIntegerError = NULL;
-    
-    FILE * fp;
-    size_t len = 0;
-    ssize_t read;
-    
-    fp = fopen("/Users/wtf/Desktop/stock2.txt", "r");
-    getCoinName(coin, &selectedCoin);
-    int coinPosition = 0;
-    
-    printf("Getting stock of: %s\n", selectedCoin);
-    
-    if(fp != NULL) {
-        
-        // Read line by line
-        while ((read = getline(&line, &len, fp)) != -1) {
-            
-            parseIntegerError = NULL;
-            remove_newline_ch(line);
-            
-            // parses the string into number, if fails, the report is stored at parseIntegerError.
-            int coinQuantity = (int) strtol(line, &parseIntegerError,10);
-            
-            if (* parseIntegerError) {
-                
-                // Scans if the column coin is the same that the stored at 'coin' parameter
-                if(strcmp(selectedCoin, parseIntegerError) == 0) {
-                    correctCoinFlag = 1;
-                    printf("Flag setted\n");
-                    
-                } else {
-                    if(correctCoinFlag == 1) {
-                        return;
-                        
-                    } else {
-                        correctCoinFlag = 0;
-                    }
-                }
-                
-                printf("Coin: %s\n", parseIntegerError);
-                
-            } else {
-                if(correctCoinFlag == 1) {
-                    printf("Coin [%d]: %d\n",coinPosition, coinQuantity);
-                    assignValue(stock, coinPosition, coinQuantity);
-                    coinPosition ++;
-                }
-            }
-        }
-    }
-
-    
 }

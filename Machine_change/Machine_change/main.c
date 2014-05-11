@@ -139,10 +139,16 @@ void handleMenu () {
         
         getCointSize(machineCurrentCointInfo, &coinCoinsCount);
         createVector(&stockVector, (int) coinCoinsCount);
-        readStock(machineCurrentCointInfo, &stockVector);
+        handleStock(machineCurrentCointInfo, &stockVector, GET_STOCK);
         
-        printf("\nCurrent stock of [%s]\n2", coinName);
+        printf("\nCurrent stock of [%s]\n", coinName);
         printCoins(stockVector, machineCurrentCointInfo);
+        
+        changeInf(1000, moneyToChange, machineCurrentCointInfo,
+                  &solutionCoins, &stockVector);
+        
+        printf("\n\nChange of %.2f on [%s]\n", moneyToChange, coinName);
+        printCoins(solutionCoins, machineCurrentCointInfo);
         
         printf("\nStock after the change operation:\n");
         printCoins(stockVector, machineCurrentCointInfo);
@@ -153,41 +159,8 @@ void handleMenu () {
 
 
 int main(int argc, const char * argv[]) {
-    
     handleMenu();
-    
 }
-
-
-/*
-int main(int argc, const char * argv[]) {
-    CoinInfo dolarInfo;
-    selectCoin(Dolar, &dolarInfo);
-    
-
-    
-    // Getting stock
-    printf("\n\nGetting stock: \n");
-    int cointSize = 0;
-    vectorP stock = NULL;
-    
-    printf("Vector size %d\n", cointSize);
-    createVector(&stock, cointSize);
-     readStock(dolarInfo, &stock);
-    //printVect(stock);
-
-    float toChange = 1.25;
- 
-     printf("\nResulting change of %.2f\n\n", toChange);
-     printCoins(solutionCoins, dolarInfo);
-    
-    // printf("\nStock after change\n\n");
-    // printVect(stock);
-    
-    return 0;
-}
- */
-
 
 
 

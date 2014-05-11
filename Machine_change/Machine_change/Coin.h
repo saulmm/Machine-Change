@@ -14,6 +14,13 @@ typedef struct {
     char * coinName;
 } * CoinInfo;
 
+typedef enum {
+    GET_STOCK,
+    UPDATE_STOCK,
+    CREATE_STOCK
+    
+} StockMode;
+
 
 void selectCoin (CoinType coinType, CoinInfo * userCoin);
 
@@ -25,7 +32,7 @@ void getCointSize (CoinInfo coinInfo, short * cointSize);
 
 void getCoinType (CoinInfo coinInfo, CoinType * coinType) ;
 
-void readStock(CoinInfo coin, vectorP * stock);
+void handleStock(CoinInfo coin, vectorP * stock, StockMode mode);
 
 void getCoinName (CoinInfo coinInfo, char ** _coinName);
 
