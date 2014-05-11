@@ -48,7 +48,6 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
     
     switch (coinType) {
         case Euro:
-            printf("The selected coin is: [EURO]\n");
             (*userCoin) -> coinType = Euro;
             (*userCoin) -> availableCoins = (float*) &EURO_COINS;
             (*userCoin) -> coinCount = 8;
@@ -58,7 +57,6 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
             break;
             
         case Yen:
-            printf("The selected coin is: [YEN]\n");
             (*userCoin) -> coinType = Yen;
             (*userCoin) -> availableCoins = (float*) &YEN_COINS;
             (*userCoin) -> coinCount = 5;
@@ -68,7 +66,6 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
             break;
             
         case Dolar:
-            printf("The selected coin is: [DOLAR]\n");
             (*userCoin) -> coinType = Dolar;
             (*userCoin) -> availableCoins = (float*) &DOLAR_COINS;
             (*userCoin) -> coinCount = 6;
@@ -81,6 +78,8 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
             printf("That coin doesn't exists\n");
             break;
     }
+    
+    printf("\nThe selected coin is: [%s]\n", (*userCoin) -> coinName);
 }
 
 
@@ -106,10 +105,14 @@ void getCoinName (CoinInfo coinInfo, char ** _coinName) {
 
 int changeInf(int maxIterations, float changeQuantity, CoinInfo coinInfo, vectorP * solutionCoins, vectorP * stock) {
     float changeAmount = 0, changeContainer = 0;
-    int i = 1;
+    int i = 0;
+    short coinSize;
+    
+    getCointSize(coinInfo, &coinSize);
     
     while (changeAmount < changeQuantity && i < maxIterations) {
-        getSpecificCoin(i, coinInfo, &changeContainer);
+        if (i < coinSize)
+            getSpecificCoin(i, coinInfo, &changeContainer);
         
         if (changeAmount + changeContainer <= changeQuantity) {
             incrementVect(solutionCoins, i);
@@ -121,7 +124,7 @@ int changeInf(int maxIterations, float changeQuantity, CoinInfo coinInfo, vector
             changeAmount += changeContainer;
  
         } else {
-            i++;
+         i++;
         }
     }
  

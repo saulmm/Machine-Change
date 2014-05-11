@@ -88,37 +88,46 @@ void askForCoinAtGui (CoinInfo * coin) {
     }
 }
 
+void askForMachineMode(short * machineMode) {
+    *machineMode = showTwoOptionsMenu("\n\nHow this machine works ?",
+        "There is not a stock of coins.",
+        "The machine will use a limited stock of coins.");
+    }
+
+
+void askForChangeAmount (float * changeAmount, char * coinName) {
+    char preChangeAmount[5];
+    printf("\n Insert the amount of %s to change:\n> ", coinName);
+    scanf("%f", changeAmount);
+}
 
 
 void handleMenu () {
-    CoinInfo machineCurrentCointInfo = NULL;
-    char * coinName = NULL;
+    short machineMode = 0;
     float moneyToChange = 0;
+    char * coinName = NULL;
+    short coinCount = 0;
+    
+    // tad, types
+    CoinInfo machineCurrentCointInfo = NULL;
+    vectorP solutionCoins = NULL;
     
     askForCoinAtGui(&machineCurrentCointInfo);
-    
-    int machineMode = showTwoOptionsMenu("\n\nHow this machine works ?",
-        "There is not a stock of coins.",
-        "The machine will use a limited stock of coins.");
-    
-    
-    printf("Machine mode: %d\n", machineMode);
-    
-    printf("Insert the amount of money to change:\n> ");
-    scanf("%f",&moneyToChange);
-    
     getCoinName(machineCurrentCointInfo, &coinName);
+    getCointSize(machineCurrentCointInfo, &coinCount);
     
-    printf("Ready to give the change of: %.2f [%s]\n", moneyToChange, coinName);
+    askForMachineMode(&machineMode);
+    askForChangeAmount(&moneyToChange, coinName);
+    
 
+    createVector(&solutionCoins, coinCount);
     
-    vectorP solutionCoins = NULL;
-    createVector(&solutionCoins, 5);
+    
+    printf("\nReady to give the change of: %.2f [%s]\n", moneyToChange, coinName);
     
     if(machineMode == 1) {
-        
         // This method gives the change of the moneyToChange value
-        changeInf(5, moneyToChange, machineCurrentCointInfo,
+        changeInf(1000, moneyToChange, machineCurrentCointInfo,
             &solutionCoins, NULL);
         
         printCoins(solutionCoins, machineCurrentCointInfo);
