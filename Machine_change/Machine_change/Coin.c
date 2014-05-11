@@ -22,7 +22,7 @@ typedef enum {
     Euro,
     Yen,
     Dolar
-    
+
 } CoinType;
 
 
@@ -201,7 +201,6 @@ void readStock(CoinInfo coin, vectorP * stock) {
                     coinPosition ++;
                 }
             }
-            
         }
     }
 

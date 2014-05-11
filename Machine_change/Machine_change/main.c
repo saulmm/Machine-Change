@@ -20,7 +20,7 @@ int showTwoOptionsMenu (char* message, char* option1, char* option2) {
     
     do {
         printf("%s\n1) %s\n2) %s\n", message, option1, option2);
-        printf("\nYour chouce:\n> ");
+        printf("\nYour choice:\n> ");
         
         scanf(" %c", &option);
         
@@ -30,7 +30,7 @@ int showTwoOptionsMenu (char* message, char* option1, char* option2) {
                 break;
                 
             case '2':
-                return 0;
+                return 2;
                 break;
                 
             default:
@@ -74,22 +74,17 @@ void askForCoinAtGui (CoinInfo * coin) {
         "Select the coin that will be used by the machine",
         "Yen", "Dolar", "Euro");
     
-    switch (coinAnswer) {
-        case Dolar:
-            selectCoin(Dolar, coin);
-            break;
-            
-        case Euro:
-            selectCoin(Euro, coin);
-            break;
-            
-        case Yen:
-            selectCoin(Yen, coin);
-            break;
-            
-        default:
-            printf("Wrong coin\n");
-            break;
+    if (coinAnswer == 1) {
+        selectCoin(Yen, coin);
+    
+    } else if (coinAnswer == 2) {
+        selectCoin(Dolar, coin);
+
+    } else if (coinAnswer == 3) {
+        selectCoin(Euro, coin);
+    
+    } else {
+        printf("Wrong coin\n");
     }
 }
 
@@ -107,19 +102,41 @@ void handleMenu () {
         "The machine will use a limited stock of coins.");
     
     
+    printf("Machine mode: %d\n", machineMode);
+    
     printf("Insert the amount of money to change:\n> ");
     scanf("%f",&moneyToChange);
     
     getCoinName(machineCurrentCointInfo, &coinName);
     
     printf("Ready to give the change of: %.2f [%s]\n", moneyToChange, coinName);
+
     
+    vectorP solutionCoins = NULL;
+    createVector(&solutionCoins, 5);
     
     if(machineMode == 1) {
-        printf("\nNo coins limitation mode selected...\n");
+        
+        // This method gives the change of the moneyToChange value
+        changeInf(5, moneyToChange, machineCurrentCointInfo,
+            &solutionCoins, NULL);
+        
+        printCoins(solutionCoins, machineCurrentCointInfo);
+
     
     } else if (machineMode == 2) {
-        printf("\nCoins stock limitation selected...\n");
+        short coinCoinsCount = 0;
+        vectorP stockVector = NULL;
+        
+        getCointSize(machineCurrentCointInfo, &coinCoinsCount);
+        createVector(&stockVector, (int) coinCoinsCount);
+        readStock(machineCurrentCointInfo, &stockVector);
+        
+        printf("\nCurrent stock of [%s]\n2", coinName);
+        printCoins(stockVector, machineCurrentCointInfo);
+        
+        printf("\nStock after the change operation:\n");
+        printCoins(stockVector, machineCurrentCointInfo);
     
     }
 }
@@ -138,15 +155,12 @@ int main(int argc, const char * argv[]) {
     CoinInfo dolarInfo;
     selectCoin(Dolar, &dolarInfo);
     
-    vectorP solutionCoins = NULL;
-    createVector(&solutionCoins, 5);
 
     
     // Getting stock
     printf("\n\nGetting stock: \n");
     int cointSize = 0;
     vectorP stock = NULL;
-    getCointSize(dolarInfo, &cointSize);
     
     printf("Vector size %d\n", cointSize);
     createVector(&stock, cointSize);
@@ -154,7 +168,7 @@ int main(int argc, const char * argv[]) {
     //printVect(stock);
 
     float toChange = 1.25;
-     changeInf(5, toChange, dolarInfo, &solutionCoins, &stock);
+ 
      printf("\nResulting change of %.2f\n\n", toChange);
      printCoins(solutionCoins, dolarInfo);
     
