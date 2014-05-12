@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 #include "dVector.h"
 
 
@@ -122,6 +123,11 @@ void handleStock(CoinInfo coin, vectorP * stock, StockMode mode) {
     size_t len = 0;
     ssize_t read;
     
+    int readAt = 0;
+    int writeAt = 0;
+    int startedFlag = 0;
+    int stockCounter = 0;
+    
     fp = fopen("/Users/wtf/Desktop/stock2.txt", "r+");
     getCoinName(coin, &selectedCoin);
 
@@ -131,8 +137,17 @@ void handleStock(CoinInfo coin, vectorP * stock, StockMode mode) {
     if(fp != NULL) {
         
         // Read line by line
-        while ((read = getline(&line, &len, fp)) != -1) {
+        while (read != -1) {
             
+            if(mode == UPDATE_STOCK) {
+                writeAt = (int) ftell(fp);
+                
+                if(readAt != 0) {
+                    fseek(fp, readAt, SEEK_SET);
+                }
+            }
+            
+            read = getline(&line, &len, fp);
             
             parseIntegerError = NULL;
             remove_newline_ch(line);
@@ -145,10 +160,16 @@ void handleStock(CoinInfo coin, vectorP * stock, StockMode mode) {
                 // Scans if the column coin is the same that the stored at 'coin' parameter
                 if(strcmp(selectedCoin, parseIntegerError) == 0) {
                     correctCoinFlag = 1;
+                    stockCounter = 0;
                     
                 } else {
-                    if(correctCoinFlag == 1) {
-                        return;
+                    if(correctCoinFlag == 1 && mode == GET_STOCK) {
+                        if(mode == GET_STOCK)
+                            return;
+
+                        else {
+                            correctCoinFlag = 1;
+                        }
                         
                     } else {
                         correctCoinFlag = 0;
@@ -159,9 +180,20 @@ void handleStock(CoinInfo coin, vectorP * stock, StockMode mode) {
             } else {
                 if(correctCoinFlag == 1) {
                     if(mode == UPDATE_STOCK) {
+                        char buf[3];
+
+                        // convert 123 to string [buf]
+
                         
+                        fseek(fp, writeAt, SEEK_SET);
+                        int stockValue= getValue(*stock, stockCounter);
+                        fprintf(fp, "%d\n", stockValue);;
+                        assignValue(stock, coinPosition, coinQuantity);
+                        stockCounter++;
+
+
                     } else {
-                        fprintf(fp, "cool\n");
+
                         assignValue(stock, coinPosition, coinQuantity);
                     }
                     

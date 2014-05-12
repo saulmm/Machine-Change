@@ -48,7 +48,7 @@ int handleThreeOptionsMenu(char * message, char * option1, char * option2, char 
     
     do {
         printf("\n%s\n1) %s\n2) %s\n3) %s\n", message, option1, option2, option3);
-        printf("\nYour chouce:\n> ");
+        printf("\nYour choice:\n> ");
         
         scanf("%s", choice);
         int intOption = atoi(choice);
@@ -108,7 +108,6 @@ void handleMenu () {
     char * coinName = NULL;
     short coinCount = 0;
     
-    // tad, types
     CoinInfo machineCurrentCointInfo = NULL;
     vectorP solutionCoins = NULL;
     
