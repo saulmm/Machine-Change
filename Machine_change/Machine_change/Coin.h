@@ -37,3 +37,5 @@ void handleStock(CoinInfo coin, vectorP * stock, StockMode mode);
 void getCoinName (CoinInfo coinInfo, char ** _coinName);
 
 void printCoins(vectorP coins, CoinInfo info);
+
+void getStock(CoinInfo coinInfo, vectorP * stock, StockMode stockManagement);

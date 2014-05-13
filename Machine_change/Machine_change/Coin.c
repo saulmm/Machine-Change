@@ -23,14 +23,14 @@ typedef enum {
     Euro,
     Yen,
     Dolar
-
+    
 } CoinType;
 
 typedef enum {
     GET_STOCK,
     UPDATE_STOCK,
     CREATE_STOCK
-
+    
 } StockMode;
 
 
@@ -40,7 +40,7 @@ typedef struct {
     int stock;
     float * availableCoins;
     char * coinName;
-
+    
 } * CoinInfo;
 
 
@@ -68,7 +68,7 @@ void selectCoin (CoinType coinType, CoinInfo* userCoin) {
             (*userCoin) -> coinType = Yen;
             (*userCoin) -> availableCoins = (float*) &YEN_COINS;
             (*userCoin) -> coinCount = 5;
-
+            
             (*userCoin) -> coinName = malloc(10 * sizeof(char));
             (*userCoin) -> coinName = "Yen";
             break;
@@ -111,97 +111,114 @@ void getCoinName (CoinInfo coinInfo, char ** _coinName) {
 }
 
 
-void handleStock(CoinInfo coin, vectorP * stock, StockMode mode) {
-    int correctCoinFlag = 0;
-    int coinPosition = 0;
+void getStock(CoinInfo coinInfo, vectorP * stock, StockMode stockManagement) {
+    FILE * stockFile = NULL;
     
-    char * line = NULL;
-    char * selectedCoin = NULL;
+    char * currentLine = NULL;
     char * parseIntegerError = NULL;
+    char * selectedCoinName = NULL;
+    char * stockFileName = "/Users/wtf/Desktop/stock2.txt";
     
-    FILE * fp;
-    size_t len = 0;
-    ssize_t read;
+    int isReadingFlag = 0;
+    int currentCoinStock = 0;
+    int currentCoinPosition = 0;
+    int correctCurrencyFlag = 0;
     
     int readAt = 0;
     int writeAt = 0;
-    int startedFlag = 0;
-    int stockCounter = 0;
     
-    fp = fopen("/Users/wtf/Desktop/stock2.txt", "r+");
-    getCoinName(coin, &selectedCoin);
-
+    size_t lineLength = 0;
     
-    printf("Getting stock of: %s\n", selectedCoin);
+    stockFile = fopen(stockFileName, "r+");
+    getCoinName(coinInfo, &selectedCoinName);
     
-    if(fp != NULL) {
-        
-        // Read line by line
-        while (read != -1) {
+    
+    if(stockFile != NULL) {
+        // Read the stock file line by line
+        while (isReadingFlag != -1) {
             
-            if(mode == UPDATE_STOCK) {
-                writeAt = (int) ftell(fp);
-                
-                if(readAt != 0) {
-                    fseek(fp, readAt, SEEK_SET);
-                }
+            // Only if theres is the UPDATE_STOCK mode activated the method will
+            // store the current file cursor given by ftell at writeAt to seek before overwrite
+            // the selected currency
+            if(stockManagement == UPDATE_STOCK) {
+                writeAt = (int) ftell(stockFile);
             }
             
-            read = getline(&line, &len, fp);
-            
             parseIntegerError = NULL;
-            remove_newline_ch(line);
             
-            // parses the string into number, if fails, the report is stored at parseIntegerError.
-            int coinQuantity = (int) strtol(line, &parseIntegerError,10);
+            // Current line of the stock file
+            isReadingFlag = (int) getline(&currentLine, &lineLength, stockFile);
+            remove_newline_ch(currentLine);
             
-            if (* parseIntegerError) {
+            // parse the string into number, if fails, the error reason (string) is stored at parseIntegerError.
+            currentCoinStock = (int) strtol(currentLine, &parseIntegerError, 10);
+            
+            // if there has been a problem trying to read the stock of the current currency means that
+            // we are reading a currency name, if not means that is the current coin stock of the selected currency
+            if (*parseIntegerError) {
                 
-                // Scans if the column coin is the same that the stored at 'coin' parameter
-                if(strcmp(selectedCoin, parseIntegerError) == 0) {
-                    correctCoinFlag = 1;
-                    stockCounter = 0;
+                // if the comparaison is successfull i.e (Searching stock of Dolar)
+                if(strcmp(selectedCoinName, parseIntegerError) == 0) {
+                    correctCurrencyFlag = 1;
+                    currentCoinStock = 0;
                     
                 } else {
-                    if(correctCoinFlag == 1 && mode == GET_STOCK) {
-                        if(mode == GET_STOCK)
-                            return;
-
-                        else {
-                            correctCoinFlag = 1;
-                        }
+                    // if we reach2ed the correct currency return on GET_STOCK mode, if not continues reading the file
+                    if (correctCurrencyFlag == 1) {
                         
-                    } else {
-                        correctCoinFlag = 0;
+                        if(stockManagement == GET_STOCK) {
+                            return;
+                            
+                        } else {
+                            correctCurrencyFlag = 0;
+                        }
                     }
                 }
                 
-                
+                // This else means that we reading a coin quantity
             } else {
-                if(correctCoinFlag == 1) {
-                    if(mode == UPDATE_STOCK) {
-                        char buf[3];
-
-                        // convert 123 to string [buf]
-
+                if(correctCurrencyFlag == 1) {
+                    if (stockManagement == UPDATE_STOCK) {
+                        // Seek the cursor file to the last cursor position before read
+                        fseek(stockFile, writeAt, SEEK_SET);
+                        int stockValue= getValue(*stock, currentCoinPosition);
                         
-                        fseek(fp, writeAt, SEEK_SET);
-                        int stockValue= getValue(*stock, stockCounter);
-                        fprintf(fp, "%d\n", stockValue);;
-                        assignValue(stock, coinPosition, coinQuantity);
-                        stockCounter++;
-
-
-                    } else {
-
-                        assignValue(stock, coinPosition, coinQuantity);
+                        // Overwrite the value
+                        if(stockValue < 100 && stockValue > 10) {
+                            fprintf(stockFile, "0%d\n", stockValue);
+                     
+                        } else if (stockValue < 10) {
+                            fprintf(stockFile, "00%d\n", stockValue);
+                     
+                        } else {
+                            fprintf(stockFile, "%d\n", stockValue);
+                        }
                     }
                     
+                    assignValue(stock, currentCoinPosition, currentCoinStock);
                     
-                    coinPosition ++;
+                    // this integer stores the position of the current coin at the current currency, a.k.a number of line
+                    // after a currency name.
+                    currentCoinPosition ++;
                 }
             }
         }
+        printVect(stock);
+    }
+}
+
+
+void printCoins(vectorP coins, CoinInfo info) {
+    float currentCoin = 0;
+    
+    if (coins != NULL) {
+        for (int i = 0; i < getSize(coins); i++) {
+            getSpecificCoin(i, info, &currentCoin);
+            printf("%d Coins x [%.2f]\n", getValue(coins, i), currentCoin);
+        }
+        
+    } else {
+        printf("[ERROR] The vector is not initialized.");
     }
 }
 
@@ -225,30 +242,16 @@ int changeInf(int maxIterations, float changeQuantity, CoinInfo coinInfo, vector
             }
             
             changeAmount += changeContainer;
- 
+            
         } else {
-         i++;
+            i++;
         }
     }
- 
-    if(stock != NULL) {
-        handleStock(coinInfo, stock, UPDATE_STOCK);
-    }
-
-    return 0;
- }
-
-
-void printCoins(vectorP coins, CoinInfo info) {
-    float currentCoin = 0;
     
-    if (coins != NULL) {
-        for (int i = 0; i < getSize(coins); i++) {
-            getSpecificCoin(i, info, &currentCoin);
-            printf("%d Coins x [%.2f]\n", getValue(coins, i), currentCoin);
-        }
-        
-    } else {
-        printf("[ERROR] The vector is not initialized.");
+    if(stock != NULL) {
+        getStock(coinInfo, stock, UPDATE_STOCK);
     }
+    
+    return 0;
 }
+

@@ -131,27 +131,26 @@ void handleMenu () {
         
         printCoins(solutionCoins, machineCurrentCointInfo);
 
-    
     } else if (machineMode == 2) {
         short coinCoinsCount = 0;
         vectorP stockVector = NULL;
         
         getCointSize(machineCurrentCointInfo, &coinCoinsCount);
         createVector(&stockVector, (int) coinCoinsCount);
-        handleStock(machineCurrentCointInfo, &stockVector, GET_STOCK);
-        
-        printf("\nCurrent stock of [%s]\n", coinName);
+
+        printf("Stock before give the change: \n");
+        getStock(machineCurrentCointInfo, &stockVector, GET_STOCK);
         printCoins(stockVector, machineCurrentCointInfo);
         
+        printf("\nYour change:\n");
         changeInf(1000, moneyToChange, machineCurrentCointInfo,
                   &solutionCoins, &stockVector);
         
-        printf("\n\nChange of %.2f on [%s]\n", moneyToChange, coinName);
         printCoins(solutionCoins, machineCurrentCointInfo);
-        
-        printf("\nStock after the change operation:\n");
+
+        printf("\nStock after give the change\n");
+        getStock(machineCurrentCointInfo, &stockVector, GET_STOCK);
         printCoins(stockVector, machineCurrentCointInfo);
-    
     }
 }
 
@@ -160,6 +159,3 @@ void handleMenu () {
 int main(int argc, const char * argv[]) {
     handleMenu();
 }
-
-
-
